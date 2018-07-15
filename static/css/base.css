@@ -1,0 +1,67 @@
+/* container */
+.regen-container {
+  padding: 0 3%;
+}
+/* #container */
+
+/* font */
+.bold-font, .bold-font p {
+  font-weight: bold;
+}
+i {
+  font-family: "FreightBigPro",serif;
+  font-weight: normal;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+/* #bold-font */
+
+/* hidden */
+.hidden {
+  display: none;
+}
+/* #hidden */
+
+/* vodal */
+.vodal-dialog {
+  overflow: auto;
+}
+/* #vodal */
+
+/* img input */
+.img-inputer__preview-img {
+  width: auto!important;
+  height: 100%;
+}
+
+a {
+  cursor: pointer;
+}
+
+
+.CodeMirror-fullscreen {
+  z-index: 1000;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+
+.clearfix::after {
+  clear: both;
+  content: '';
+  display: block;
+  font-size: 0;
+}
+
+/* float */
+.right {
+  float: right;
+}
+.left {
+  float: left;
+}
+.inline-block {
+  display: inline-block;
+}

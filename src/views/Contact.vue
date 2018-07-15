@@ -1,0 +1,512 @@
+<template>
+  <div class="regen-container main-container">
+    <div class="edit-container" v-if="isLogin">
+      <a @click="onEditBtnClick"><i class="fa fa-edit fa-lg edit-btn"></i></a>
+      <vodal :show="editModalInfo.show"
+             :mask="editModalInfo.mask"
+             :width="editModalInfo.width"
+             :height="editModalInfo.height"
+             :measure="editModalInfo.measure"
+             animation="rotate"
+             @hide="editModalInfo.show = false">
+        <h3>Update Contact Information</h3>
+        <div class="form-horizontal">
+          <div class="form-group"
+               v-for="curField in editModalInfo.autoInput">
+            <label :for="'input'+curField" class="col-sm-2 control-label">{{curField}}</label>
+            <div class="col-sm-8">
+              <input type="text"
+                     class="form-control"
+                     :id="'input'+curField"
+                     :placeholder="'input ' + curField"
+                     v-model="editModalInfo.inputData[curField]">
+            </div>
+          </div>
+          <EditSelectTable :inputData="editModalInfo.inputData.social" :title="'Social'"></EditSelectTable>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-8">
+              <markdownEditor
+                :value="editModalInfo.inputData.desc"
+                @input="onDescInput"
+                :custom-theme="true"
+                ref="markdownEditorRef">
+              </markdownEditor>
+            </div>
+          </div>
+        </div>
+        <footer class="confirm-btn-group">
+          <button class="btn btn-success"
+                  @click="onConfirmBtnClick(true)"
+                  :class="{'disabled': editModalInfo.isSaving}">确定</button>
+          <button class="btn btn-danger" @click="onConfirmBtnClick(false)">取消</button>
+          <span v-if="editModalInfo.isSaving">保存中...</span>
+        </footer>
+      </vodal>
+    </div>
+    <main>
+      <div v-html="descMarkdown" class="common-markdown"></div>
+
+      <div class="photos">
+        <div class="edit-container" v-if="isLogin">
+          <a @click="workerModalInfo.show = true"><i class="fa fa-plus fa-lg add-btn"></i></a>
+          <WorkerInput :show="workerModalInfo.show"
+                       :title="workerModalInfo.title"
+                       @hide="workerModalInfo.show = false"
+                       @onConfirmBtnClick="onCreateWorkerConfirmBtnClick"></WorkerInput>
+        </div>
+        <div v-for="photo,index in photos" class="photos-item">
+
+          <img :src="photo.img_url" alt="p.name">
+          <div class="edit-container-parent">
+            <p>{{photo.name}}</p>
+            <div class="edit-container" v-if="isLogin">
+              <a @click="onWorkerEditBtnClick(index)"><i class="fa fa-edit fa-lg edit-btn"></i></a>
+              <a @click="onWorkerDeleteBtnClick(photo.id)"><i class="fa fa-trash fa-lg minus-btn"></i></a>
+              <p class="rank"><i class="fa fa-line-chart fa-lg"></i>
+                Rank: {{photo.rank}}</p>
+
+              <ConfirmVodal :vodalText="confirmVodalText"
+                            :show="confirmVodalText.show"
+                            @hide="confirmVodalText.show = false"
+                            @onConfirmBtnClick="onWorkerDeleteConfirmBtnClick"
+                            :extraData="confirmVodalText.extraData">
+              </ConfirmVodal>
+              <WorkerInput :show="editWorkerModalInfo.show"
+                           :title="editWorkerModalInfo.title"
+                           @hide="editWorkerModalInfo.show = false"
+                           :workerData="editWorkerModalInfo.workerData "
+                           @onConfirmBtnClick="onEditWorkerConfirmBtnClick"></WorkerInput>
+            </div>
+          </div>
+          <p><i>{{photo.identity}}</i></p>
+          <p class="email">{{photo.email}}</p>
+        </div>
+      </div>
+      <Pagination :pageInfo="pageInfo" @onPageChange="onPageChange"></Pagination>
+    </main>
+    <nav>
+      <div class="contacts">
+        <div class="contacts-item">
+          <strong>Tel:</strong>
+          <p>{{contactData.phone}}</p>
+        </div>
+        <!--<div class="contacts-item">-->
+        <!--<strong>Photography:</strong>-->
+        <!--<p>{{contactData.photography}}</p>-->
+        <!--</div>-->
+        <div class="contacts-item">
+          <strong>Add:</strong>
+          <p>{{contactData.fax}}</p>
+        </div>
+      </div>
+      <div class="location">
+        <p>{{contactData.address}}</p>
+      </div>
+
+      <img src="../../static/img/location.jpg" alt="location" class="img-location" />
+
+      <div class="links">
+        <a :href="contactData.link" target="_blank">{{contactData.link}}</a>
+        <div class="icon-group">
+          <a :href="socialItem.value" v-for="socialItem in contactData.social">
+            <i class="fa" :class="'fa-' + socialItem.key"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</template>
+
+<script>
+  import { mapGetters } from 'vuex'
+  import toastr from 'toastr'
+  import marked from 'marked'
+  import Vodal from 'vodal'
+  import { markdownEditor } from 'vue-simplemde'
+
+  import 'vue-multiselect/dist/vue-multiselect.min.css'
+  import 'simplemde-theme-base/dist/simplemde-theme-base.min.css'
+
+  import Pagination from './components/PaginationV2.vue'
+  import WorkerInput from './admin/components/WorkerInput.vue'
+  import ConfirmVodal from '@/views/components/ConfirmVodal'
+  import EditSelectTable from './admin/components/EditSelectTable'
+
+  import ContactService from '@/service/ContactService'
+  import env from '@/config/env'
+  export default {
+    data () {
+      return {
+        contactData: {
+          desc: '',
+          id: 1,
+          phone: '',
+          photography: '',
+          fax: '',
+          address: '',
+          link: '',
+          social: []
+        },
+        title: env.BRAND_NAME + ' | 联系我们',
+        pageInfo: {
+          totalPages: 0,
+          curPageNum: 1,
+          pageGroupSum: env.PAGE_GROUP_SUM
+        },
+        photos: [],
+        editModalInfo: {
+          show: false,
+          mask: true,
+          width: 85,
+          height: 90,
+          measure: '%',
+          inputData: {
+            phone: '',
+            photography: '',
+            fax: '',
+            address: '',
+            link: '',
+            social: [],
+            desc: ''
+          },
+          isSaving: false,
+          autoInput: ['phone', 'photography', 'fax', 'address', 'link']
+        },
+        workerModalInfo: {
+          show: false,
+          title: '创建员工'
+        },
+        editWorkerModalInfo: {
+          show: false,
+          title: '更新员工',
+          workerData: {
+            img: null,
+            name: '',
+            email: '',
+            rank: 1,
+            identity: '',
+            img_url: ''
+          }
+        },
+        confirmVodalText: {
+          title: '删除',
+          content: '是否删除这名员工？',
+          extraData: null,
+          show: false
+        }
+      }
+    },
+    methods: {
+      ...mapGetters({
+        checkLogin: 'checkLogin'
+      }),
+      async getDetail () {
+        let respBody = await ContactService.get(this)
+        if (respBody.code === env.RESP_CODE.SUCCESS) {
+          this.contactData = respBody.msg
+        }
+      },
+      async getWorkers (newCurPageNum) {
+        let respBody = await ContactService.getAllWorkers(this, newCurPageNum)
+        console.log(respBody)
+        if (respBody.code === env.RESP_CODE.SUCCESS) {
+          this.photos = respBody.msg.workers
+          this.pageInfo.totalPages = Math.ceil(respBody.msg.total / respBody.msg.itemSize)
+          this.pageInfo.curPageNum = newCurPageNum
+        }
+      },
+      onPageChange (newCurPageNum) {
+        this.getWorkers(newCurPageNum)
+      },
+      onDescInput (value) {
+        this.editModalInfo.inputData.desc = value
+      },
+      onEditBtnClick () {
+        this.editModalInfo.inputData = JSON.parse(JSON.stringify(this.contactData))
+        this.editModalInfo.show = true
+      },
+      async onConfirmBtnClick (result) {
+        if (result) {
+          let respBody = await ContactService.update(this, this.editModalInfo.inputData)
+          if (respBody.code === env.RESP_CODE.SUCCESS) {
+            this.contactData = this.editModalInfo.inputData
+            toastr.success('更新数据成功！')
+          } else {
+            toastr.error('更新数据失败！')
+          }
+        }
+        this.editModalInfo.show = false
+      },
+      async onCreateWorkerConfirmBtnClick (result) {
+        if (result.result) {
+          let respBody = await ContactService.createWorker(this, result.data)
+          if (respBody.code === env.RESP_CODE.SUCCESS) {
+            toastr.success('创建员工成功！')
+            this.getWorkers(this.pageInfo.curPageNum)
+          } else {
+            toastr.error('创建员工失败！')
+          }
+        }
+        this.workerModalInfo.show = false
+      },
+      onWorkerDeleteBtnClick (workerId) {
+        this.confirmVodalText.extraData = workerId
+        this.confirmVodalText.show = true
+      },
+      async onWorkerDeleteConfirmBtnClick (result) {
+        if (result.result) {
+          let respBody = await ContactService.deleteWorker(this, {
+            id: result.extraData
+          })
+          if (respBody.code === env.RESP_CODE.SUCCESS) {
+            this.getWorkers(this.pageInfo.curPageNum)
+            toastr.success('删除员工成功！')
+          } else {
+            toastr.error('删除员工失败！')
+          }
+        }
+        this.confirmVodalText.show = false
+      },
+      onWorkerEditBtnClick (photoIndex) {
+        this.editWorkerModalInfo.workerData = JSON.parse(JSON.stringify(this.photos[photoIndex]))
+        this.editWorkerModalInfo.show = true
+      },
+      async onEditWorkerConfirmBtnClick (result) {
+        if (result.result) {
+          let respBody = await ContactService.updateWorker(this, {
+            id: result.data.id,
+            name: result.data.name,
+            email: result.data.email,
+            identity: result.data.identity,
+            rank: result.data.rank
+          })
+          if (respBody.code === env.RESP_CODE.SUCCESS) {
+            toastr.success('更新员工信息成功！')
+            if (result.data.img) {
+              console.log('img', result.data.id)
+              let respBody = await ContactService.updateWorkerImg(this, {
+                id: result.data.id,
+                img: result.data.img
+              })
+              if (respBody.code === env.RESP_CODE.SUCCESS) {
+                toastr.success('更新员工图片成功！')
+              } else {
+                toastr.error('更新员工图片失败！')
+              }
+            }
+            this.getWorkers(this.pageInfo.curPageNum)
+          } else {
+            toastr.error('更新员工信息失败！')
+          }
+        }
+        this.editWorkerModalInfo.show = false
+      }
+    },
+    computed: {
+      descMarkdown () {
+        return marked(this.contactData.desc)
+      },
+      isLogin () {
+        return this.checkLogin()
+      }
+    },
+    components: {
+      Pagination,
+      Vodal,
+      markdownEditor,
+      WorkerInput,
+      ConfirmVodal,
+      EditSelectTable
+    },
+    mounted () {
+      document.title = this.title
+      this.getDetail()
+      this.getWorkers(1)
+    }
+  }
+</script>
+
+<style lang="scss" scoped="">
+  @import "../../static/css/common";
+  @import "../../node_modules/vodal/common.css";
+  @import "../../node_modules/vodal/rotate.css";
+  /*.contact-container {*/
+  * {
+    font-family: Arial FZLTHJW;
+  }
+  .main-container {
+    display: flex;
+    position: relative;
+    padding-top: 20px;
+    .edit-container {
+      position: absolute;
+      left: 45%;
+      top: 0;
+    }
+    .edit-container-parent {
+      position: relative;
+    }
+  }
+  /* main */
+  .main-container main {
+    padding-right: 3%;
+    border-right: 1px solid #222222;
+    flex: 2.5;
+  }
+
+  .main-container main .photos {
+    display: flex;
+    flex-wrap: wrap;
+    /*justify-content: space-between;*/
+    justify-content: flex-start;
+  }
+
+  .main-container main .photos .photos-item {
+    width: 28%;
+    padding: 10px 0;
+    margin: 0 1%;
+    cursor: pointer;
+  }
+  .main-container main .photos img:hover {
+    opacity: .7;
+  }
+  .main-container main .photos img {
+    width: 100%;
+  }
+  .main-container main .photos p.email {
+    font-size: 1.2em;
+  }
+  .main-container main .photos p {
+    line-height: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .main-container .photos {
+    position: relative;
+    .photos-item {
+      position: relative;
+      .edit-container {
+        position: absolute;
+        left: 60%;
+        top: 20px;
+        .rank {
+          padding: 8px;
+          background: $commonGray*1.5;
+          font-size: 1em;
+        }
+      }
+    }
+    .edit-container {
+      position: absolute;
+      left: 45%;
+      top: -10px;
+    }
+  }
+  /* #main */
+
+  /* nav */
+  .main-container nav {
+    padding-left: 3%;
+    flex: 1;
+  }
+
+  .main-container nav, .main-container nav p {
+    font-size: 1.1em;
+  }
+
+  .main-container nav .contacts {
+  }
+  .main-container nav .contacts .contacts-item {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .main-container nav .contacts .contacts-item strong {
+    flex: 1;
+    padding-right: 3%;
+  }
+  .main-container nav .contacts .contacts-item p {
+    flex: 2;
+    margin-bottom: 5px;
+  }
+
+  .main-container nav  img.img-location {
+    width: 90%;
+    margin-bottom: 15px;
+  }
+
+  .main-container nav .location p, .main-container nav .icon-group a i{
+    color: #95A5A6;
+  }
+  .main-container nav .location p:first-child {
+    margin: 10px 0 0 0;
+  }
+  .main-container nav .location p:last-child {
+    margin: 0 0 20px 0;
+  }
+
+  .main-container nav .links a {
+    text-decoration: none;
+    color: #111;
+  }
+
+  .main-container nav .icon-group {
+    margin: 20px 0;
+  }
+  .main-container nav .icon-group a {
+    margin-right: 3%;
+  }
+  .main-container nav .icon-group a:hover i{
+    /*color: #111;*/
+    font-weight: bold;
+  }
+  /* #nav */
+
+  p {
+    font-family:  Georgia, serif;
+    font-weight: lighter;
+    letter-spacing: 0.02em;
+    font-size: 1.5em;
+    line-height: 135%;
+    margin-top: -0.3em;
+    margin-bottom: 1em;
+    color: #111;
+  }
+
+  h3 {
+    line-height: 2em;
+    border-bottom: 1px solid $commonGray;
+  }
+  footer {
+    padding-top: 10px;
+    border-top: 1px solid $commonGray;
+  }
+  .confirm-btn-group {
+    margin-top: 4%;
+  }
+  .confirm-btn-group button {
+    width: 35%;
+    max-width: 100px;
+  }
+
+  @media screen and (max-width: 720px) {
+    .main-container main .photos .photos-item {
+      width: 90%;
+    }
+    .main-container {
+      flex-direction: column;
+      main {
+        border-right: none;
+
+        img {
+          max-width: 100%;
+        }
+      }
+      nav {
+        padding-top: 15px;
+        border-bottom: 1px solid $commonGray;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,55 @@
+$borderColor: #e08283;
+$commonRed: #F62459;
+$commonRedLight: #e08283;
+
+$commonYellow: #F9BF3B;
+$commonYellowLight: #F4B350;
+
+$commonGreen: #26A65B;
+$commonGreenLight: #03C9A9;
+
+$commonGray: #95A5A6;
+
+$commonGolden: #827430;
+
+.add-btn {
+  color: $commonGreen;
+}
+.add-btn:hover {
+  color: $commonGreenLight;
+}
+.minus-btn {
+  color: $commonRed;
+}
+.minus-btn:hover {
+  color: $commonRedLight;
+}
+
+.edit-btn {
+  color: $commonYellow;
+}
+.edit-btn:hover {
+  color: $commonYellowLight;
+}
+
+/* override element */
+.el-collapse-item__wrap {
+  overflow: visible;
+}
+.search-panel-popper {
+  padding: 0;
+}
+
+/* override multiselect */
+.multiselect {
+  z-index: 10;
+}
+
+.el-upload__input {
+  display: none!important;
+}
+
+.common-markdown {
+  line-height: 20px;
+  letter-spacing: .4px;
+}
