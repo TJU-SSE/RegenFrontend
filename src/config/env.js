@@ -2,7 +2,8 @@ export default {
   // BASE_URL: 'http://121.42.169.109:3000',
   // BASE_URL: 'http://localhost:3000',
   BRAND_NAME: 'REGEN',
-  BASE_URL: 'http://101.132.77.182:3000',
+  // BASE_URL: 'http://101.132.77.182:3000',
+  BASE_URL: 'http://212.64.17.49:3000',
   RESP_CODE: {
     SUCCESS: '0',
     FAIL: '1',
