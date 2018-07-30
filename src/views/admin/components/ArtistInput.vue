@@ -69,7 +69,7 @@
         <div class="form-group">
           <label for="nameInput" class="col-sm-2 control-label">Cover</label>
           <div class="col-sm-8">
-            <VueImgInputer :onChange="onFileChange" :imgSrc="createData.img_url"></VueImgInputer>
+            <VueImgInputer :onChange="onFileChange" max-size='102400' :imgSrc="createData.img_url"></VueImgInputer>
           </div>
         </div>
       </div>
