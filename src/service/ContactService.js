@@ -32,6 +32,21 @@ export default {
     }
   },
 
+  async getAllContactInfo (context) {
+    try {
+      let response = await httpRequest(context, backendUrl.CONTACT_GET_ALL, 'get')
+      if (response.body.code === env.RESP_CODE.SUCCESS) {
+        console.log('API测试', response.body)
+      }
+      return response.body
+    } catch (exception) {
+      return {
+        code: env.RESP_CODE.FAIL,
+        err: exception
+      }
+    }
+  },
+
   async update (context, postData) {
     try {
       let response = await httpRequest(context, backendUrl.CONTACT_UPDATE, 'post', {
@@ -43,6 +58,22 @@ export default {
         social: JSON.stringify(postData.social),
         desc: postData.desc
       })
+      return response.body
+    } catch (exception) {
+      return {
+        code: env.RESP_CODE.FAIL,
+        err: exception
+      }
+    }
+  },
+
+  async updateAll (context, postData) {
+    try {
+      postData[0].social = JSON.stringify(postData[0].social)
+      postData[1].social = JSON.stringify(postData[1].social)
+      var temp = {'msg': postData}
+      let response = await httpRequest(context, backendUrl.CONTACT_UPDATE, 'post', temp)
+      console.log('post_data', postData)
       return response.body
     } catch (exception) {
       return {

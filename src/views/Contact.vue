@@ -1,6 +1,6 @@
 <template>
   <div class="regen-container main-container">
-    <div class="edit-container">
+    <div class="edit-container" v-if="isLogin">
       <a @click="onEditBtnClick"><i class="fa fa-edit fa-lg edit-btn"></i></a>
       <vodal :show="editModalInfo.show"
              :mask="editModalInfo.mask"
@@ -11,26 +11,28 @@
              @hide="editModalInfo.show = false">
         <h3>Update Contact Information</h3>
         <div class="form-horizontal">
-          <div class="form-group" v-for="curField in editModalInfo.autoInput" :key="curField">
-            <label :for="'input'+curField" class="col-sm-2 control-label">{{curField}}</label>
-            <div class="col-sm-8">
-              <input type="text"
-                     class="form-control"
-                     :id="'input'+curField"
-                     :placeholder="'input ' + curField"
-                     v-model="editModalInfo.inputData[curField]">
+          <div v-for="index in editModalInfo.inputData.length" :key="index">
+            <div class="form-group" v-for="curField in editModalInfo.autoInput" :key="curField">
+              <label :for="'input'+curField" class="col-sm-2 control-label">{{curField}}</label>
+              <div class="col-sm-8">
+                <input type="text"
+                      class="form-control"
+                      :id="'input'+curField"
+                      :placeholder="'input ' + curField"
+                      v-model="editModalInfo.inputData[index-1][curField]">
+              </div>
             </div>
-          </div>
-          <EditSelectTable :inputData="editModalInfo.inputData.social" :title="'Social'"></EditSelectTable>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Description</label>
-            <div class="col-sm-8">
-              <markdownEditor
-                :value="editModalInfo.inputData.desc"
-                @input="onDescInput"
-                :custom-theme="true"
-                ref="markdownEditorRef">
-              </markdownEditor>
+            <EditSelectTable :inputData="editModalInfo.inputData[index-1].social" :title="'Social'"></EditSelectTable>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Description</label>
+              <div class="col-sm-8">
+                <markdownEditor
+                  :value="editModalInfo.inputData[index-1].desc"
+                  @input="onDescInput"
+                  :custom-theme="true"
+                  ref="markdownEditorRef">
+                </markdownEditor>
+              </div>
             </div>
           </div>
         </div>
@@ -109,28 +111,34 @@
       <Pagination :pageInfo="pageInfo" @onPageChange="onPageChange"></Pagination>
     </main>
     <nav>
-      <h3 class="city">| SHANGHAI |</h3>
+      <h3 class="city">| {{contactData[0].city_name}} |</h3>
       <div class="map">
         <iframe width='400' height='450' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://f.amap.com/5J74C_0715iY8'></iframe>
       </div>
       <div class="contacts">
         <div>
-          <p>Tel: +{{contactData.phone}}</p>
+          <p>Tel: +{{contactData[0].phone}}</p>
         </div>
         <div>
           <p>Add:</p>
         </div>
         <div>
-          <p>{{contactData.address}}</p>
+          <p>{{contactData[0].address}}</p>
         </div>
       </div>
-      <h3 class="city">| LONDON |</h3>
+      <h3 class="city">| {{contactData[1].city_name}} |</h3>
       <div class="map">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d155.1613737864298!2d-0.09867483611529332!3d51.52088464416027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b56bb5bfb43%3A0xfc22c89f43faecfc!2sFlorin+Court!5e0!3m2!1szh-CN!2sus!4v1531817952877" width='400' height='450' frameborder='0' scrolling='no' marginheight='0' marginwidth='0'></iframe>
       </div>
       <div class="contacts">
         <div>
-          <p>Flourin Court, Charterhouse Square, London EC1M 6EX(UK)</p>
+          <p>Tel: +{{contactData[1].phone}}</p>
+        </div>
+        <div>
+          <p>Add:</p>
+        </div>
+        <div>
+          <p>{{contactData[1].address}}</p>
         </div>
       </div>
     </nav>
@@ -171,16 +179,30 @@
       }
       return {
         identifyCode: '',
-        contactData: {
-          desc: '',
-          id: 1,
-          phone: '',
-          photography: '',
-          fax: '',
-          address: '',
-          link: '',
-          social: []
-        },
+        contactData: [
+          {
+            desc: '',
+            id: 1,
+            phone: '',
+            photography: '',
+            fax: '',
+            address: '',
+            link: '',
+            social: [],
+            city_name: ''
+          },
+          {
+            desc: '',
+            id: 2,
+            phone: '',
+            photography: '',
+            fax: '',
+            address: '',
+            link: '',
+            social: [],
+            city_name: ''
+          }
+        ],
         contactForm: {
           name: '',
           email: '',
@@ -211,17 +233,30 @@
           width: 85,
           height: 90,
           measure: '%',
-          inputData: {
-            phone: '',
-            photography: '',
-            fax: '',
-            address: '',
-            link: '',
-            social: [],
-            desc: ''
-          },
+          inputData: [
+            {
+              city_name: '',
+              phone: '',
+              photography: '',
+              fax: '',
+              address: '',
+              link: '',
+              social: [],
+              desc: ''
+            },
+            {
+              city_name: '',
+              phone: '',
+              photography: '',
+              fax: '',
+              address: '',
+              link: '',
+              social: [],
+              desc: ''
+            }
+          ],
           isSaving: false,
-          autoInput: ['phone', 'photography', 'fax', 'address', 'link']
+          autoInput: ['city_name', 'phone', 'photography', 'fax', 'address', 'link']
         },
         workerModalInfo: {
           show: false,
@@ -293,18 +328,25 @@
       },
       async getWorkers (newCurPageNum) {
         let respBody = await ContactService.getAllWorkers(this, newCurPageNum)
-        console.log(respBody)
         if (respBody.code === env.RESP_CODE.SUCCESS) {
           this.photos = respBody.msg.workers
           this.pageInfo.totalPages = Math.ceil(respBody.msg.total / respBody.msg.itemSize)
           this.pageInfo.curPageNum = newCurPageNum
         }
       },
+
+      async getAllContactInfo () {
+        let respBody = await ContactService.getAllContactInfo(this)
+        if (respBody.code === env.RESP_CODE.SUCCESS) {
+          this.contactData = respBody.msg
+        }
+      },
       onPageChange (newCurPageNum) {
         this.getWorkers(newCurPageNum)
       },
       onDescInput (value) {
-        this.editModalInfo.inputData.desc = value
+        this.editModalInfo.inputData[0].desc = value
+        this.editModalInfo.inputData[1].desc = value
       },
       onEditBtnClick () {
         this.editModalInfo.inputData = JSON.parse(JSON.stringify(this.contactData))
@@ -312,7 +354,7 @@
       },
       async onConfirmBtnClick (result) {
         if (result) {
-          let respBody = await ContactService.update(this, this.editModalInfo.inputData)
+          let respBody = await ContactService.updateAll(this, this.editModalInfo.inputData)
           if (respBody.code === env.RESP_CODE.SUCCESS) {
             this.contactData = this.editModalInfo.inputData
             toastr.success('更新数据成功！')
@@ -389,7 +431,7 @@
     },
     computed: {
       descMarkdown () {
-        return marked(this.contactData.desc)
+        return marked(this.contactData[0].desc)
       },
       isLogin () {
         return this.checkLogin()
@@ -406,7 +448,7 @@
     },
     mounted () {
       document.title = this.title
-      this.getDetail()
+      this.getAllContactInfo()
       this.getWorkers(1)
       this.setValidate()
     }

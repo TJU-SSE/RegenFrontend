@@ -57,6 +57,7 @@ export default {
   CONTACT_GET: '/admin/contact/get',
   CONTACT_UPDATE: '/admin/contact/update',
   CONTACT_FORM: '/message/create',
+  CONTACT_GET_ALL: '/admin/contact/getall',
 
   WORKER_GET_ALL: '/admin/worker/getAll',
   WORKER_CREATE: '/admin/worker/create',
