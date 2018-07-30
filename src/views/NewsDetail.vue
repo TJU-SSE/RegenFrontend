@@ -1,13 +1,13 @@
 <template>
   <div class="main-container news-detail">
-    <div class="edit-btn" v-if="isLogin" @click="editModalInfo.show=true">
+    <div class="edit-btn" @click="editModalInfo.show=true">
       <a href="javascript:"><i class="fa fa-edit fa-lg"></i></a>
     </div>
 
     <div class="news-wrap">
       <div class="news-margin">
         <div class="news-tag">
-          <a href="javascript:" v-for="tag in news.tag" class="tag-item">{{tag}}</a>
+          <a href="javascript:" v-for="(tag, index) in news.tag" class="tag-item" :key="index">{{tag}}</a>
         </div>
         <h2 class="news-title">{{news.title}}</h2>
         <div class="social-share" data-initialized="true" id="socialShare">
@@ -46,7 +46,8 @@
       <div class="recommended-footer">
         <div
           class="recommended-footer-item"
-          v-for="item in recommended"
+          v-for="(item, index) in recommended"
+          :key="index"
           @click="onRecommendedClick($event,item.newsId)"
         >
           <img :src="item.imgUrl">
@@ -254,7 +255,9 @@
       }
       .news-main {
         line-height: 24px;
-        letter-spacing: .1px;
+        letter-spacing: .5px;
+        inline-size: 800px;
+        line-height: 25px;
       }
     }
 

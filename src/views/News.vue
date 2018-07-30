@@ -1,7 +1,7 @@
 <template>
   <main>
     <p class="news-page-title">LATEST</p>
-    <div v-for="newsItem in newsItems" class="news-item">
+    <div v-for="(newsItem, index) in newsItems" :key="index" class="news-item">
       <img :src="newsItem.imgUrl" :alt="newsItem.title" class="news-img" @click="onNewsItemClick(newsItem.newsId)">
       <NewsContent :newsItem="newsItem" @onItemClick="onNewsItemClick"></NewsContent>
       <div v-if="isLogin">

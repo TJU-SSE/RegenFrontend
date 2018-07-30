@@ -6,7 +6,7 @@
       <span class="news-author-name">{{newsItem.author}}</span>
     </p>
     <div class="news-content-row news-info">
-      <span class="news-tag" v-for="tag in newsItem.tag">{{tag}}</span>
+      <span class="news-tag" v-for="tag in newsItem.tag" :key="tag">{{tag}}</span>
       <span class="news-date">{{newsItem.date}}</span>
     </div>
   </div>
