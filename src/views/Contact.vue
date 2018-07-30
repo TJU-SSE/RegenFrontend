@@ -109,32 +109,28 @@
       <Pagination :pageInfo="pageInfo" @onPageChange="onPageChange"></Pagination>
     </main>
     <nav>
+      <h3 class="city">| SHANGHAI |</h3>
+      <div class="map">
+        <iframe width='400' height='450' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://f.amap.com/5J74C_0715iY8'></iframe>
+      </div>
       <div class="contacts">
-        <div class="contacts-item">
-          <strong>Tel:</strong>
-          <p>{{contactData.phone}}</p>
+        <div>
+          <p>Tel: +{{contactData.phone}}</p>
         </div>
-        <!--<div class="contacts-item">-->
-        <!--<strong>Photography:</strong>-->
-        <!--<p>{{contactData.photography}}</p>-->
-        <!--</div>-->
-        <div class="contacts-item">
-          <strong>Add:</strong>
-          <p>{{contactData.fax}}</p>
+        <div>
+          <p>Add:</p>
+        </div>
+        <div>
+          <p>{{contactData.address}}</p>
         </div>
       </div>
-      <div class="location">
-        <p>{{contactData.address}}</p>
+      <h3 class="city">| LONDON |</h3>
+      <div class="map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d155.1613737864298!2d-0.09867483611529332!3d51.52088464416027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b56bb5bfb43%3A0xfc22c89f43faecfc!2sFlorin+Court!5e0!3m2!1szh-CN!2sus!4v1531817952877" width='400' height='450' frameborder='0' scrolling='no' marginheight='0' marginwidth='0'></iframe>
       </div>
-
-      <img src="../../static/img/location.jpg" alt="location" class="img-location" />
-
-      <div class="links">
-        <a :href="contactData.link" target="_blank">{{contactData.link}}</a>
-        <div class="icon-group">
-          <a :href="socialItem.value" v-for="socialItem in contactData.social" :key="socialItem">
-            <i class="fa" :class="'fa-' + socialItem.key"></i>
-          </a>
+      <div class="contacts">
+        <div>
+          <p>Flourin Court, Charterhouse Square, London EC1M 6EX(UK)</p>
         </div>
       </div>
     </nav>
@@ -292,6 +288,7 @@
         let respBody = await ContactService.get(this)
         if (respBody.code === env.RESP_CODE.SUCCESS) {
           this.contactData = respBody.msg
+          console.log('联系', this.contactData)
         }
       },
       async getWorkers (newCurPageNum) {
@@ -436,6 +433,17 @@
     .edit-container-parent {
       position: relative;
     }
+  }
+
+  .map > img {
+    max-width: 300px;
+    margin-left: 25px;
+  }
+
+  .city {
+    font-size: 28px;
+    color: #c5181f;
+    padding-left: 130px;
   }
 
   .contact {
