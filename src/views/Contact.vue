@@ -1,6 +1,6 @@
 <template>
   <div class="regen-container main-container">
-    <div class="edit-container" v-if="isLogin">
+    <div class="edit-container">
       <a @click="onEditBtnClick"><i class="fa fa-edit fa-lg edit-btn"></i></a>
       <vodal :show="editModalInfo.show"
              :mask="editModalInfo.mask"
@@ -257,13 +257,24 @@
         this.identifyCode = rand
       },
       contactSubmit () {
-        this.$refs.contactForm.validate((valid) => {
+        this.$refs.contactForm.validate(async (valid) => {
           if (valid) {
-            console.log('要提交的表单: ', this.contactForm)
-            this.$message({
-              message: '提交成功，请等待工作人员与您联系',
-              type: 'success'
+            let respBody = await ContactService.sendContactForm(this, {
+              name: this.contactForm.name,
+              email: this.contactForm.email,
+              content: this.contactForm.content
             })
+            if (respBody.code === env.RESP_CODE.SUCCESS) {
+              this.$message({
+                message: '提交成功，请等待工作人员与您联系',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '出现错误，请重试',
+                type: 'error'
+              })
+            }
           } else {
             this.$message({
               message: '出现错误，请重试',
@@ -400,6 +411,7 @@
       document.title = this.title
       this.getDetail()
       this.getWorkers(1)
+      this.setValidate()
     }
   }
 </script>

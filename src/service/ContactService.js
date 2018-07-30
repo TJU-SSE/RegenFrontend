@@ -65,6 +65,18 @@ export default {
     }
   },
 
+  async sendContactForm (context, postData) {
+    try {
+      let response = await httpRequest(context, backendUrl.CONTACT_FORM, 'post', postData)
+      return response.body
+    } catch (exception) {
+      return {
+        code: env.RESP_CODE.FAIL,
+        err: exception
+      }
+    }
+  },
+
   async deleteWorker (context, postData) {
     try {
       let response = await httpRequest(context, backendUrl.WORKER_DELETE, 'post', postData)
