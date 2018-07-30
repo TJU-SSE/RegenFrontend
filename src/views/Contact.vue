@@ -11,8 +11,7 @@
              @hide="editModalInfo.show = false">
         <h3>Update Contact Information</h3>
         <div class="form-horizontal">
-          <div class="form-group"
-               v-for="curField in editModalInfo.autoInput">
+          <div class="form-group" v-for="curField in editModalInfo.autoInput" :key="curField">
             <label :for="'input'+curField" class="col-sm-2 control-label">{{curField}}</label>
             <div class="col-sm-8">
               <input type="text"
@@ -55,7 +54,7 @@
                        @hide="workerModalInfo.show = false"
                        @onConfirmBtnClick="onCreateWorkerConfirmBtnClick"></WorkerInput>
         </div>
-        <div v-for="photo,index in photos" class="photos-item">
+        <div v-for="(photo,index) in photos" :key="index" class="photos-item">
 
           <img :src="photo.img_url" alt="p.name">
           <div class="edit-container-parent">
@@ -83,6 +82,30 @@
           <p class="email">{{photo.email}}</p>
         </div>
       </div>
+      <div class="contact">
+        <h4>业务咨询、简历投递 请留下您的联系方式</h4>
+        <h4>Please leave your contact details here for coopertaion or work opportunity</h4>
+        <el-form :model="contactForm" :rules="rules" ref="contactForm">
+          <el-form-item label="姓名 Name" prop="name">
+            <el-input v-model="contactForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱 Email" prop="email">
+            <el-input v-model="contactForm.email"></el-input>
+          </el-form-item>
+          <el-form-item label="内容 Content" prop="content">
+            <el-input type="textarea" v-model="contactForm.content" :rows="4"></el-input>
+          </el-form-item>
+          <el-form-item label="验证码 Verification Code" prop="verificationCode">
+            <el-input v-model="contactForm.verificationCode"></el-input>
+            <div class="code" @click="setValidate">
+                <s-identify :identifyCode="identifyCode"></s-identify>
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="contactSubmit">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
       <Pagination :pageInfo="pageInfo" @onPageChange="onPageChange"></Pagination>
     </main>
     <nav>
@@ -109,7 +132,7 @@
       <div class="links">
         <a :href="contactData.link" target="_blank">{{contactData.link}}</a>
         <div class="icon-group">
-          <a :href="socialItem.value" v-for="socialItem in contactData.social">
+          <a :href="socialItem.value" v-for="socialItem in contactData.social" :key="socialItem">
             <i class="fa" :class="'fa-' + socialItem.key"></i>
           </a>
         </div>
@@ -132,12 +155,26 @@
   import WorkerInput from './admin/components/WorkerInput.vue'
   import ConfirmVodal from '@/views/components/ConfirmVodal'
   import EditSelectTable from './admin/components/EditSelectTable'
+  import SIdentify from '@/views/components/identify'
 
   import ContactService from '@/service/ContactService'
   import env from '@/config/env'
   export default {
     data () {
+      var checkImage = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入验证码'))
+          return
+        } else if (value !== this.identifyCode) {
+          callback(new Error('验证码错误'))
+          this.setValidate()
+          return
+        } else {
+          callback()
+        }
+      }
       return {
+        identifyCode: '',
         contactData: {
           desc: '',
           id: 1,
@@ -147,6 +184,23 @@
           address: '',
           link: '',
           social: []
+        },
+        contactForm: {
+          name: '',
+          email: '',
+          content: '',
+          verificationCode: ''
+        },
+        rules: {
+          name: [
+            {required: true, message: '这是一个必填项哦', trigger: 'blur'}
+          ],
+          content: [
+            {required: true, message: '这是一个必填项哦', trigger: 'blur'}
+          ],
+          verificationCode: [
+            {required: true, trigger: 'blur', validator: checkImage}
+          ]
         },
         title: env.BRAND_NAME + ' | 联系我们',
         pageInfo: {
@@ -198,6 +252,28 @@
       }
     },
     methods: {
+      setValidate () {
+        const rand = ('' + parseInt((1 + Math.random()) * Math.PI * 10000)).slice(-4)
+        this.identifyCode = rand
+      },
+      contactSubmit () {
+        this.$refs.contactForm.validate((valid) => {
+          if (valid) {
+            console.log('要提交的表单: ', this.contactForm)
+            this.$message({
+              message: '提交成功，请等待工作人员与您联系',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: '出现错误，请重试',
+              type: 'error'
+            })
+            return false
+          }
+        })
+        this.setValidate()
+      },
       ...mapGetters({
         checkLogin: 'checkLogin'
       }),
@@ -317,7 +393,8 @@
       markdownEditor,
       WorkerInput,
       ConfirmVodal,
-      EditSelectTable
+      EditSelectTable,
+      SIdentify
     },
     mounted () {
       document.title = this.title
@@ -347,6 +424,10 @@
     .edit-container-parent {
       position: relative;
     }
+  }
+
+  .contact {
+    padding-top: 100px;
   }
   /* main */
   .main-container main {
@@ -488,6 +569,10 @@
   .confirm-btn-group button {
     width: 35%;
     max-width: 100px;
+  }
+
+  .code {
+    margin: 10px 0px 0 0px;
   }
 
   @media screen and (max-width: 720px) {
