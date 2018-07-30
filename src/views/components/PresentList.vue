@@ -61,11 +61,11 @@
               </div>
             </div>
             <div class="side-desc">
-              <p>{{item.desc}}</p>
-              <p>{{item.time}}</p>
+              <p>  {{item.desc}}</p>
+              <p>  {{item.time}}</p>
               <ul v-if="item.introduction && item.introduction.artists" class="artist-list">
                 <li v-for="artist in item.introduction.artists">
-                  <a>{{artist.key}}</a> - {{artist.value}}
+                  {{artist.key}} ： <a>{{artist.value}}</a>
                 </li>
               </ul>
             </div>
@@ -143,6 +143,8 @@
         if (this.timer) {
           window.clearTimeout(this.timer)
         }
+        console.log('itemList:')
+        console.log(this.itemList)
 
         this.timer = window.setTimeout(async () => {
           const itemId = this.itemList[index].id
@@ -401,14 +403,13 @@
 
   .side-desc {
     border-top: 1px solid $commonGray;
-    margin: 5px 10px 5px 20px;
+    margin: 20px 20px 5px 20px;
     width: 90%;
   }
 
   .side-desc h3 {
     margin: 5px 0;
     font-size: 1.5em;
-    border-bottom: 1px solid $commonGray;
     font-weight: 500;
   }
 

@@ -131,18 +131,7 @@
                 </ProductListEdit>
               </vodal>
             </div>
-            <transition name="slide-fade">
-              <div class="pagination" v-if="upShow && pageInfo.totalPages">
-                <el-pagination
-                  layout="prev, pager, next"
-                  :page-count="pageInfo.totalPages"
-                  :page-size="pageInfo.pageSize"
-                  :current-page="pageInfo.curPageNum"
-                  @current-change="onPageChange"
-                >
-                </el-pagination>
-              </div>
-            </transition>
+
             <transition name="slide-fade">
               <div class="honor-list" v-if="upShow">
                 <presentList ref="datas2" :itemList="showItems" :artistId="artistId" @onDeleteClick="onDeleteClick"></presentList>
