@@ -83,6 +83,19 @@
           <div class="img-desc common-markdown" v-html="imgDesc"></div>
         </div>
       </transition>
+
+      <!-- <embed 
+      src="http://my.tv.sohu.com/us/326455690/103228997.shtml"
+      allowFullScreen='true' 
+      quality='high' 
+      width='480' 
+      height='400' 
+      align='middle' 
+      allowScriptAccess='always' 
+      type='application/x-shockwave-flash'>
+      </embed> -->
+
+
       <iframe
         width="560"
         height="315"
