@@ -11,19 +11,19 @@ let action = 'https://upload.qiniup.com'
 
 // 空间名
 
-let bucketName = 'infotest'
+let bucketName = 'nickelback'
 
 // AccessKey
 
-let AK = 'opKzqbb_E-y_yKjCufAu8KOiBzlhMXH2G-EXuKVj'
+let AK = 'ZDlYPzgcB_u-HOlDCexoHRu65tCK7cktZkKUjpA1'
 
 //  SecretKey
 
-let SK = 'b6pyxBh1o8PCNALdlihIZv54wOxqrbxVohrRLQPH'
+let SK = 'xy1QlwLnCKbEqS8zOA_IypJ7ef0wN6VK7hsS8mGi'
 
 // 空间绑定域名
 
-let domain = 'http://pc0bksa0g.bkt.clouddn.com/'
+let domain = 'http://p3d12u2wq.bkt.clouddn.com/'
 
 /* utf.js - UTF-8 <=> UTF-16 convertion
  *
