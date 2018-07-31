@@ -31,6 +31,10 @@
                 </vue-u-editor>
               </div>
             </div>
+            <div class="form-group" v-if="index===2">
+            <label class="col-sm-2 control-label">Upload Image</label>
+            <el-button type="primary">上传图片</el-button>
+          </div>
           </div>
         </div>
         <footer class="confirm-btn-group">

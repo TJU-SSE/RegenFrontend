@@ -20,6 +20,7 @@
           <label class="col-sm-2 control-label">Cover</label>
           <div class="col-sm-8">
             <VueImgInputer :onChange="onFileChange" :imgSrc="workerData.img_url"></VueImgInputer>
+            <p>{{this.workerData.img_url}}</p>
           </div>
         </div>
       </div>
