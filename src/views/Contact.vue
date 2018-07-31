@@ -147,7 +147,6 @@
   import toastr from 'toastr'
   import marked from 'marked'
   import Vodal from 'vodal'
-  import { markdownEditor } from 'vue-simplemde'
   import vueUEditor from 'vue-ueditor'
 
   import 'vue-multiselect/dist/vue-multiselect.min.css'
@@ -451,7 +450,6 @@
     components: {
       Pagination,
       Vodal,
-      markdownEditor,
       WorkerInput,
       ConfirmVodal,
       EditSelectTable,
