@@ -8,7 +8,8 @@ export default {
     try {
       let response = await httpRequest(context, backendUrl.CONTACT_GET, 'get')
       if (response.body.code === env.RESP_CODE.SUCCESS) {
-        response.body.msg.social = JSON.parse(response.body.msg.social)
+        response.body.msg[0].social = JSON.parse(response.body.msg[0].social)
+        response.body.msg[1].social = JSON.parse(response.body.msg[1].social)
       }
       return response.body
     } catch (exception) {
@@ -37,6 +38,9 @@ export default {
       let response = await httpRequest(context, backendUrl.CONTACT_GET_ALL, 'get')
       if (response.body.code === env.RESP_CODE.SUCCESS) {
         console.log('API测试', response.body)
+        // response.body.msg[0].social = JSON.parse(response.body.msg[0].social)
+        // response.body.msg[1].social = JSON.parse(response.body.msg[1].social)
+        console.log('msg', response.body.msg)
       }
       return response.body
     } catch (exception) {
@@ -69,8 +73,10 @@ export default {
 
   async updateAll (context, postData) {
     try {
+      console.log('过滤前', postData[0].social)
       postData[0].social = JSON.stringify(postData[0].social)
       postData[1].social = JSON.stringify(postData[1].social)
+      console.log('过滤后', postData[0].social)
       var temp = { 'msg': postData }
       console.log('post_data', temp)
       let response = await httpRequest(context, backendUrl.CONTACT_UPDATE, 'post', temp)

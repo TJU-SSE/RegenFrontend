@@ -22,7 +22,7 @@
                       v-model="editModalInfo.inputData[index-1][curField]">
               </div>
             </div>
-            <EditSelectTable :inputData="editModalInfo.inputData[index-1].social" :title="'Social'"></EditSelectTable>
+            <EditSelectTable :inputData="editModalInfo.inputData[index-1]['social']" :title="'Social'"></EditSelectTable>
             <div class="form-group" v-if="index===2">
               <label class="col-sm-2 control-label">Description</label>
               <div class="col-sm-8">
@@ -345,8 +345,8 @@
         let respBody = await ContactService.getAllContactInfo(this)
         if (respBody.code === env.RESP_CODE.SUCCESS) {
           this.contactData = respBody.msg
-          this.contactData[0].social = []
-          this.contactData[1].social = []
+          this.contactData[0].social = JSON.parse(this.contactData[0].social)
+          this.contactData[1].social = JSON.parse(this.contactData[1].social)
           console.log('联系', this.contactData)
         }
       },
