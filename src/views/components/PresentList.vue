@@ -63,12 +63,13 @@
             <div class="side-desc">
               <p>  {{item.desc}}</p>
               <p>  {{item.time}}</p>
-              <ul v-if="item.introduction && item.introduction.artists" class="artist-list">
-                <li v-for="artist in item.introduction.artists">
-                  {{artist.key}} ： <a>{{artist.value}}</a>
-                </li>
-              </ul>
             </div>
+            <ul class="side-desc">
+            <p v-for="artist in artistData">
+                <a @click="onArtistClick(artist.id)">{{artist.name}}</a> - {{getSplitStr(artist.identity)}}
+                <i class="fa fa-external-link"></i>
+            </p>
+        </ul>
           </div>
         </div>
       </div>
@@ -81,6 +82,7 @@
   import ProductService from '@/service/ProductService'
   import ArtistProductService from '@/service/ArtistProductService'
   import env from '@/config/env'
+  import CommonUtils from '../../config/CommonUtils'
   import ConfirmVodal from '@/views/components/ConfirmVodal'
   import InputVodal from '@/views/components/InputVodal'
   import { mapGetters } from 'vuex'
@@ -90,6 +92,8 @@
         activeItem: -1,
         forSafari: 0,
         imgList: {},
+        productId: this.$route.params.showId,
+        artistData: [],
         curImgList: [],
         confirmVodalText: {
           title: '删除',
@@ -127,14 +131,33 @@
       ...mapGetters({
         checkLogin: 'checkLogin'
       }),
-      initData () {
+  
+      async getData (showId) {
+        let respBody = await ProductService.getDetail(this, showId)
+        if (respBody.code === env.RESP_CODE.SUCCESS) {
+          const artistIdMap = {}
+          this.artistData = respBody.msg.artists.filter((artist) => {
+            if (!artistIdMap[artist.id]) {
+              artistIdMap[artist.id] = true
+              return true
+            }
+            return false
+          })
+        }
+      },
+      async initData () {
         let userAgent = navigator.userAgent
         let isSafari = userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') < 1
+        console.log('fuck')
+        console.log(this.artistData)
         if (isSafari) {
           this.forSafari = this.itemList.length * 140 + 100
         }
       },
       async itemActive (index) {
+        console.log('index:')
+        console.log()
+        await this.getData(this.itemList[index].id)
         if (this.confirmVodalText.show || this.updateVodalInfo.show) {
           this.activeItem = -1
           return
@@ -143,9 +166,6 @@
         if (this.timer) {
           window.clearTimeout(this.timer)
         }
-        console.log('itemList:')
-        console.log(this.itemList)
-
         this.timer = window.setTimeout(async () => {
           const itemId = this.itemList[index].id
           if (!this.imgList[itemId]) {
@@ -186,6 +206,9 @@
           }
         }
         this.confirmVodalText.show = false
+      },
+      getSplitStr (str) {
+        return CommonUtils.getSplitStr(str)
       },
       onItemEditBtnClick (product) {
         this.updateVodalInfo.inputText = product.rank

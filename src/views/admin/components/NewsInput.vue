@@ -54,6 +54,7 @@
                    :onChange="onFileChange" v-if="isEditing">
     </VueImgInputer>
 
+
     <!--<div>-->
       <!--<img :src="newsData.imgUrl">-->
     <!--</div>-->
@@ -64,6 +65,7 @@
         @ready="editorReady">
       </vue-u-editor>
     </div>
+        <upload-image></upload-image>
   </div>
 </template>
 
@@ -75,7 +77,7 @@
 
   import TagService from '@/service/TagService'
   import env from '@/config/env'
-
+  import uploadImage from '../UploadImage.vue'
   import InputVodal from '@/views/components/InputVodal'
 
   import 'vue-multiselect/dist/vue-multiselect.min.css'
@@ -122,7 +124,8 @@
       Multiselect,
       VueImgInputer,
       InputVodal,
-      vueUEditor
+      vueUEditor,
+      uploadImage
     },
     methods: {
       editorReady (editorInstance) {

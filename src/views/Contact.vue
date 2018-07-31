@@ -33,7 +33,7 @@
             </div>
             <div class="form-group" v-if="index===2">
             <label class="col-sm-2 control-label">Upload Image</label>
-            <el-button type="primary">上传图片</el-button>
+            <uploadImage></uploadImage>
           </div>
           </div>
         </div>
@@ -161,6 +161,7 @@
   import ConfirmVodal from '@/views/components/ConfirmVodal'
   import EditSelectTable from './admin/components/EditSelectTable'
   import SIdentify from '@/views/components/identify'
+  import uploadImage from './admin/UploadImage.vue'
 
   import ContactService from '@/service/ContactService'
   import env from '@/config/env'
@@ -458,7 +459,8 @@
       ConfirmVodal,
       EditSelectTable,
       SIdentify,
-      vueUEditor
+      vueUEditor,
+      uploadImage
     },
     mounted () {
       document.title = this.title
