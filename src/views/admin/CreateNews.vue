@@ -5,7 +5,6 @@
 </template>
 
 <script>
-  import { markdownEditor } from 'vue-simplemde'
   import Multiselect from 'vue-multiselect'
   import toastr from '../../../node_modules/toastr/build/toastr.min'
 
@@ -23,7 +22,6 @@
       }
     },
     components: {
-      markdownEditor,
       Multiselect,
       NewsInput
     },
