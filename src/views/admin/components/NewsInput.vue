@@ -60,21 +60,18 @@
 
     <div class="content" id="news-editor">
       <h3>Content</h3>
-      <markdownEditor
-        :value="newsData.content"
-        @input="onNewsContentInput"
-        :custom-theme="true"
-        ref="markdownEditorRef">
-      </markdownEditor>
+      <vue-u-editor
+        @ready="editorReady">
+      </vue-u-editor>
     </div>
   </div>
 </template>
 
 <script>
-  import { markdownEditor } from 'vue-simplemde'
   import Multiselect from 'vue-multiselect'
   import VueImgInputer from 'vue-img-inputer'
   import toastr from 'toastr/build/toastr.min'
+  import vueUEditor from 'vue-ueditor'
 
   import TagService from '@/service/TagService'
   import env from '@/config/env'
@@ -93,7 +90,8 @@
             date: '',
             content: '',
             img: null,
-            tag: null
+            tag: null,
+            editorInstance: null
           }
         }
       },
@@ -121,12 +119,20 @@
       }
     },
     components: {
-      markdownEditor,
       Multiselect,
       VueImgInputer,
-      InputVodal
+      InputVodal,
+      vueUEditor
     },
     methods: {
+      editorReady (editorInstance) {
+        this.editorInstance = editorInstance
+        this.editorInstance.setContent(this.newsData.content)
+        this.editorInstance.addListener('contentChange', () => {
+          console.log('编辑器内容变化', this.editorInstance.getContent())
+          this.newsData.content = this.editorInstance.getContent()
+        })
+      },
       onNewsContentInput (value) {
         this.newsData.content = value
       },
