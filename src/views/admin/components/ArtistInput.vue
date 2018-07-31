@@ -91,7 +91,8 @@
 
   import EditTable from './EditTable.vue'
   import EditSelectTable from './EditSelectTable.vue'
-
+  import uploadImage from '../UploadImage.vue'
+  
   import env from '@/config/env'
 
   import 'vue-multiselect/dist/vue-multiselect.min.css'
@@ -146,7 +147,8 @@
       VueImgInputer,
       Vodal,
       markdownEditor,
-      EditSelectTable
+      EditSelectTable,
+      uploadImage
     },
     computed: {
       secondMenus () {
