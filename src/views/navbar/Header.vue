@@ -196,6 +196,11 @@
             name: 'products',
             title: '作品库',
             authority: true
+          },
+          {
+            name: 'tags',
+            title: '标签库',
+            authority: true
           }
         ],
         customerSearchActives: []

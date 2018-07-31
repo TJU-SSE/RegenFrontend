@@ -16,6 +16,7 @@ import Login from '@/views/Login'
 
 import CreateNews from '@/views/admin/CreateNews'
 import ProductList from '@/views/admin/ProductList'
+import Tags from '@/views/admin/Tags'
 
 Vue.use(Router)
 
@@ -136,6 +137,16 @@ const router = new Router({
       components: {
         headerBar: Header,
         mainPage: ProductList,
+        footerBar: Footer
+      }
+    },
+    {
+      path: '/admin/tags',
+      name: 'tags',
+      meta: {role: ['admin']},
+      components: {
+        headerBar: Header,
+        mainPage: Tags,
         footerBar: Footer
       }
     },
