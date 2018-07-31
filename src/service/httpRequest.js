@@ -43,6 +43,38 @@ async function request (context, url = '', method = 'get', data = {}, headType =
         return null
       }
       return resp
+    case 'DELETE':
+      switch (headType) {
+        case env.REQUIRE_HEAD_TYPE.FORM_DATA:
+          header = {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+            credentials: true
+          }
+          break
+        case env.REQUIRE_HEAD_TYPE.JSON:
+          header = {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: true
+          }
+          break
+        default:
+          header = { emulateJSON: true, credentials: true }
+      }
+      let resp2 = await context.$http.delete(url, data, header)
+      console.log('[REQUEST Back]', method, url, data, resp2)
+      if (resp2.body.code === env.RESP_CODE.NO_LOGIN) {
+        console.log('not login')
+        context.$router.push({
+          name: 'login'
+        })
+        toastr.error('登录失效，请重新登录')
+        return null
+      }
+      return resp2
   }
 }
 

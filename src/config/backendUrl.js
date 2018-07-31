@@ -3,6 +3,8 @@ export default {
 
   TAG_ALL: '/admin/tag/findAll',
   TAG_CREATE: '/admin/tag/create',
+  TAG_DELETE: '/admin/tag/delete',
+  TAG_UPDATE: '/admin/tag/update',
 
   NEWS_CREATE: '/admin/news/create',
   NEWS_GET_ALL: '/admin/news/getAll',

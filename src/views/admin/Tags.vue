@@ -1,12 +1,16 @@
 <template>
     <div>
-    <el-row><p></p></el-row>
+    
     <el-row><p></p></el-row>
     <el-row><p></p></el-row>
     <el-row>
     <el-col :span="4"><p></p></el-col>
     <el-col :span="16">
-    <div class="tagtable makecenter">
+    <div class="tagtable">
+      <el-row><el-button @click="handleNew">新建标签</el-button></el-row>  
+      <el-row><p></p></el-row>
+      <el-row><p></p></el-row>   
+      <el-row>
         <el-table
         :data="tags"
         stripe
@@ -17,7 +21,7 @@
             width="180">
         </el-table-column>
         <el-table-column
-            prop="name"
+            prop="title"
             label="标签"
             width="180">
         </el-table-column>
@@ -32,7 +36,10 @@
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
         </el-table-column>        
-        </el-table>        
+        </el-table> 
+        </el-row>
+        <el-row><p></p></el-row>
+          
     </div>
     </el-col>
     <!-- <el-col :span="8"><p></p></el-col> -->
@@ -46,10 +53,22 @@
         </el-form-item>   
         </el-form>
           <div slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisible = false">取 消</el-button>
-    <el-button type="primary" @click="changetag">确 定</el-button>
-  </div>
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="changetag">确 定</el-button>
+        </div>
     </el-dialog>
+
+    <el-dialog title=“新建标签” :visible.sync="dialogNewVisible">
+        <el-form :model="form">
+        <el-form-item label="标签名称" :label-width="formLabelWidth">
+            <el-input v-model="tagname.new" auto-complete="off"></el-input>
+        </el-form-item>   
+        </el-form>
+          <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="newtag">确 定</el-button>
+        </div>
+    </el-dialog>    
     </div>
 </template>
 
@@ -72,7 +91,8 @@
         tags: [],
         // tags: [{id: 0, name: 'fasion'}],
         dialogFormVisible: false,
-        tagname: {'name': ''},
+        dialogNewVisible: false,
+        tagname: {'name': '', 'new': ''},
         selectedtag: -1
       }
     },
@@ -84,7 +104,7 @@
     },
     methods: {
       async getTags () {
-        let resp = await TagService.getAll(this)
+        let resp = await TagService.gettags(this)
         if (resp.code === env.RESP_CODE.SUCCESS) {
           this.tags = resp.msg
         } else {
@@ -95,9 +115,34 @@
         this.selectedtag = row.id
         this.dialogFormVisible = true
       },
-      handleDelete (index, row) {
+      async handleDelete (index, row) {
+        console.log('the id')
+        console.log(row.id)
+        await TagService.delete(this, {'id': row.id})
+        window.location.reload()
+        // this.$http.delete('/admin/tag/delete', {id: row.id})
       },
-      changetag () {
+      handleNew () {
+        this.dialogNewVisible = true
+      },
+      async changetag () {
+        let resp = await TagService.update(this, {'id': this.selectedtag, 'title': this.tagname.name})
+        if (resp.code === env.RESP_CODE.SUCCESS) {
+          console.log('succeed')
+          window.location.reload()
+        } else {
+          toastr.error('更新tags失败！')
+        }
+        this.dialogFormVisible = false
+      },
+      async newtag () {
+        let resp = await TagService.create(this, {'title': this.tagname.new})
+        if (resp.code === env.RESP_CODE.SUCCESS) {
+          console.log('succeed')
+          window.location.reload()
+        } else {
+          toastr.error('更新tags失败！')
+        }
         this.dialogFormVisible = false
       }
     },
@@ -110,12 +155,5 @@
 <style scoped lang="scss">
   .tagtable {
     width: 600px;
-  }
-  .makecenter{
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: row;
-    justify-content: space-around;
-
   }
 </style>
