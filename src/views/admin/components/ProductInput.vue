@@ -34,12 +34,8 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Description</label>
           <div class="col-sm-8">
-            <markdownEditor
-              :value="productData.introduction.desc"
-              @input="onNewsContentInput"
-              :custom-theme="true"
-              ref="markdownEditorRef">
-            </markdownEditor>
+            <textarea class="form-control" id="inputDescription"
+                   placeholder="Description" v-model="productData.introduction.desc"></textarea>
           </div>
         </div>
         <div class="form-group">
@@ -108,7 +104,6 @@
 </template>
 
 <script>
-  import { markdownEditor } from 'vue-simplemde'
   import VueImgInputer from 'vue-img-inputer'
   import Vodal from 'vodal'
   import Multiselect from 'vue-multiselect'
@@ -176,7 +171,6 @@
     components: {
       VueImgInputer,
       Vodal,
-      markdownEditor,
       EditTable,
       Calendar,
       Multiselect
