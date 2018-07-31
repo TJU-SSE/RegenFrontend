@@ -64,11 +64,11 @@
               <p>  {{item.desc}}</p>
               <p>  {{item.time}}</p>
             </div>
-            <ul class="artist">
-            <li v-for="artist in artistData">
+            <ul class="side-desc">
+            <p v-for="artist in artistData">
                 <a @click="onArtistClick(artist.id)">{{artist.name}}</a> - {{getSplitStr(artist.identity)}}
                 <i class="fa fa-external-link"></i>
-            </li>
+            </p>
         </ul>
           </div>
         </div>
