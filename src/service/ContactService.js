@@ -71,9 +71,9 @@ export default {
     try {
       postData[0].social = JSON.stringify(postData[0].social)
       postData[1].social = JSON.stringify(postData[1].social)
-      var temp = {'msg': postData}
+      var temp = { 'msg': postData }
+      console.log('post_data', temp)
       let response = await httpRequest(context, backendUrl.CONTACT_UPDATE, 'post', temp)
-      console.log('post_data', postData)
       return response.body
     } catch (exception) {
       return {

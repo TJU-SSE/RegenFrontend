@@ -23,15 +23,12 @@
               </div>
             </div>
             <EditSelectTable :inputData="editModalInfo.inputData[index-1].social" :title="'Social'"></EditSelectTable>
-            <div class="form-group">
+            <div class="form-group" v-if="index===2">
               <label class="col-sm-2 control-label">Description</label>
               <div class="col-sm-8">
-                <markdownEditor
-                  :value="editModalInfo.inputData[index-1].desc"
-                  @input="onDescInput"
-                  :custom-theme="true"
-                  ref="markdownEditorRef">
-                </markdownEditor>
+                <vue-u-editor
+                  @ready="editorReady">
+                </vue-u-editor>
               </div>
             </div>
           </div>
@@ -151,6 +148,7 @@
   import marked from 'marked'
   import Vodal from 'vodal'
   import { markdownEditor } from 'vue-simplemde'
+  import vueUEditor from 'vue-ueditor'
 
   import 'vue-multiselect/dist/vue-multiselect.min.css'
   import 'simplemde-theme-base/dist/simplemde-theme-base.min.css'
@@ -179,6 +177,7 @@
       }
       return {
         identifyCode: '',
+        editorInstance: null,
         contactData: [
           {
             desc: '',
@@ -287,6 +286,14 @@
         const rand = ('' + parseInt((1 + Math.random()) * Math.PI * 10000)).slice(-4)
         this.identifyCode = rand
       },
+      editorReady (editorInstance) {
+        this.editorInstance = editorInstance
+        this.editorInstance.addListener('contentChange', () => {
+          console.log('编辑器内容变化', this.editorInstance.getContent())
+          this.editModalInfo.inputData[0].desc = this.editorInstance.getContent()
+          this.editModalInfo.inputData[1].desc = this.editorInstance.getContent()
+        })
+      },
       contactSubmit () {
         this.$refs.contactForm.validate(async (valid) => {
           if (valid) {
@@ -323,7 +330,6 @@
         let respBody = await ContactService.get(this)
         if (respBody.code === env.RESP_CODE.SUCCESS) {
           this.contactData = respBody.msg
-          console.log('联系', this.contactData)
         }
       },
       async getWorkers (newCurPageNum) {
@@ -339,6 +345,9 @@
         let respBody = await ContactService.getAllContactInfo(this)
         if (respBody.code === env.RESP_CODE.SUCCESS) {
           this.contactData = respBody.msg
+          this.contactData[0].social = []
+          this.contactData[1].social = []
+          console.log('联系', this.contactData)
         }
       },
       onPageChange (newCurPageNum) {
@@ -347,9 +356,11 @@
       onDescInput (value) {
         this.editModalInfo.inputData[0].desc = value
         this.editModalInfo.inputData[1].desc = value
+        this.editorInstance.setContent(value)
       },
       onEditBtnClick () {
         this.editModalInfo.inputData = JSON.parse(JSON.stringify(this.contactData))
+        this.editorInstance.setContent(this.editModalInfo.inputData[0].desc)
         this.editModalInfo.show = true
       },
       async onConfirmBtnClick (result) {
@@ -444,7 +455,8 @@
       WorkerInput,
       ConfirmVodal,
       EditSelectTable,
-      SIdentify
+      SIdentify,
+      vueUEditor
     },
     mounted () {
       document.title = this.title
