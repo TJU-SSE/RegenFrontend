@@ -46,24 +46,30 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Desc</label>
           <div class="col-sm-8">
-            <vue-u-editor
-              @ready="editorDescReady">
-            </vue-u-editor>
+            <markdownEditor
+              :value="createData.biography.desc"
+              @input="onNewsContentInput"
+              :custom-theme="true"
+              ref="markdownEditorRef">
+            </markdownEditor>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">Product List</label>
           <div class="col-sm-8">
-            <vue-u-editor
-              @ready="editorProductReady">
-            </vue-u-editor>
+            <markdownEditor
+              :value="createData.biography.products"
+              @input="onProductsInput"
+              :custom-theme="true"
+              ref="markdownEditorRef">
+            </markdownEditor>
           </div>
         </div>
         <EditTable :inputData="createData.biography.personInfo" :title="personInfoTitle"></EditTable>
         <div class="form-group">
           <label for="nameInput" class="col-sm-2 control-label">Cover</label>
           <div class="col-sm-8">
-            <VueImgInputer :onChange="onFileChange" :max-size='102400' :imgSrc="createData.img_url"></VueImgInputer>
+            <VueImgInputer :onChange="onFileChange" max-size='102400' :imgSrc="createData.img_url"></VueImgInputer>
           </div>
         </div>
       </div>
@@ -78,7 +84,7 @@
 </template>
 
 <script>
-  import vueUEditor from 'vue-ueditor'
+  import { markdownEditor } from 'vue-simplemde'
   import toastr from 'toastr'
   import VueImgInputer from 'vue-img-inputer'
   import Vodal from '../../../../node_modules/vodal/src/Vodal'
@@ -132,17 +138,15 @@
         addressTitle: 'Address',
         extraBiographyTitle: 'ExtraBiography',
         personInfoTitle: 'Person Info',
-        biographyTitle: 'Biography',
-        editorInstanceDesc: null,
-        editorInstanceProduct: null
+        biographyTitle: 'Biography'
       }
     },
     components: {
       EditTable,
       VueImgInputer,
       Vodal,
-      EditSelectTable,
-      vueUEditor
+      markdownEditor,
+      EditSelectTable
     },
     computed: {
       secondMenus () {
@@ -152,22 +156,6 @@
     methods: {
       hide () {
         this.$emit('hide')
-      },
-      editorDescReady (editorInstance) {
-        this.editorInstanceDesc = editorInstance
-        this.editorInstanceDesc.setContent(this.createData.biography.desc)
-        this.editorInstanceDesc.addListener('contentChange', () => {
-          console.log('编辑器内容变化', this.editorInstanceDesc.getContent())
-          this.createData.biography.desc = this.editorInstanceDesc.getContent()
-        })
-      },
-      editorProductReady (editorInstance) {
-        this.editorInstanceProduct = editorInstance
-        this.editorInstanceProduct.setContent(this.createData.biography.products)
-        this.editorInstanceProduct.addListener('contentChange', () => {
-          console.log('编辑器内容变化', this.editorInstanceProduct.getContent())
-          this.createData.biography.products = this.editorInstanceProduct.getContent()
-        })
       },
       onSocialAddBtnClick () {
         this.createData.social.push({
