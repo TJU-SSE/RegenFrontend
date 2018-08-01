@@ -1,7 +1,8 @@
 <template>
 
-  <div class="img-grid">
+  <div  class="img-grid">
     <div v-for="item in imgGridItems"
+          v-if="isLogin | item.display"
          class="img-grid-item"
          :key="item.designerId">
       <div class="img-container">
