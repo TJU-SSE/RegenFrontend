@@ -14,7 +14,8 @@ export default {
             designerId: artist.id,
             title: artist.name,
             desc: artist.role || artist.identity,
-            imgUrl: artist.img_url
+            imgUrl: artist.img_url,
+            display: artist.display
           }
         })
       }
@@ -67,7 +68,8 @@ export default {
         social: JSON.stringify(postData.social),
         address: JSON.stringify(postData.address),
         extraBiography: JSON.stringify(postData.extraBiography),
-        biography: JSON.stringify(postData.biography)
+        biography: JSON.stringify(postData.biography),
+        display: postData.display
       }
       let response = await httpRequest(context, backendUrl.ARTIST_UPDATE_TEXT, 'post', postData)
       return response.body

@@ -68,6 +68,9 @@
         })
         if (respBody.code === env.RESP_CODE.SUCCESS) {
           this.imgGridItems = respBody.msg.artists
+          console.log('Items:')
+          console.log(this.imgGridItems)
+          console.log(respBody.msg.artists)
           this.pageInfo.totalPages = Math.ceil(respBody.msg.total / respBody.msg.itemSize)
           this.pageInfo.curPageNum = newCurPageNum
           if (!this.isLogin &&
