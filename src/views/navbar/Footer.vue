@@ -1,7 +1,7 @@
 <template>
   <div class="footer regen-container">
     <div class="footer-row">
-      <a>COPYRIGHT&TRADEWORK</a>
+      <a>COPYRIGHT&TRADEMARK</a>
       <a>HELP/FAQ</a>
       <a>JOIN US</a>
       <div>
