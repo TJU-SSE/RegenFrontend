@@ -83,6 +83,7 @@
           identity: '',
           social: [],
           address: [],
+          dispaly: true,
           extraBiography: [],
           biography: {},
           img_url: ''
