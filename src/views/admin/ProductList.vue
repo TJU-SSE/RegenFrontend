@@ -13,7 +13,7 @@
       <div class="info-container" @click="onItemClick(product.id)">
         <h3 class="title">{{product.title}}</h3>
         <p class="session">{{product.session}}</p>
-        <p v-if="getDateStrFromOBj(product.releaseTime)" class="release-time">{{getDateStrFromOBj(product.releaseTime)}}</p>
+        <p v-if="product.releaseTime.day !== 0" class="release-time">{{getDateStrFromOBj(product.releaseTime)}}</p>
         <p class="introduction">{{product.introduction.desc}}</p>
       </div>
       <div v-if="isLogin">
