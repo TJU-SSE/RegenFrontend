@@ -20,7 +20,7 @@
         >
         <el-button type="primary" size="small">{{ dialogImageUrl ? '再上传一张' : '添加' }}图片</el-button>
         </el-upload>
-    <p>图片链接:  {{this.dialogImageUrl}}</p>
+    <p>提示：插入图片 {{this.imgEle}}</p>
   </div>
 </template>
 
@@ -39,7 +39,8 @@ export default {
       token,
       action,
       domain,
-      progress: 0
+      progress: 0,
+      imgEle: ''
     }
   },
   computed: {
@@ -72,6 +73,7 @@ export default {
       // console.log(response, file, fileList)
       this.progress = 100
       this.dialogImageUrl = this.domain + response.hash
+      this.imgEle = '<img src="' + this.dialogImageUrl + '">'
       this.$message({
         message: '图片上传成功~',
         type: 'success'
