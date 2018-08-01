@@ -71,6 +71,7 @@
       <footer class="confirm-btn-group">
         <button class="btn btn-success" @click="onConfirmBtnClick(true)" :class="{'disabled': vodalInfo.isSaving}">确定</button>
         <button class="btn btn-danger" @click="onConfirmBtnClick(false)">取消</button>
+        <el-checkbox v-model="createData.display">对前台显示</el-checkbox>
         <span v-if="vodalInfo.isSaving">保存中....</span>
       </footer>
     </vodal>
@@ -112,6 +113,7 @@
             social: [],
             address: [],
             extraBiography: [],
+            display: true,
             biography: {
               content: [],
               desc: '',
@@ -205,6 +207,7 @@
           identity: 0,
           social: [],
           address: [],
+          display: true,
           extraBiography: [],
           biography: {},
           img: null
