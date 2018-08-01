@@ -94,8 +94,6 @@
       allowScriptAccess='always' 
       type='application/x-shockwave-flash'>
       </embed> -->
-
-
       <iframe
         width="560"
         height="315"

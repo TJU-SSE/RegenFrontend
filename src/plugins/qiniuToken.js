@@ -11,21 +11,21 @@ let action = 'https://upload.qiniup.com'
 
 // 空间名
 
-let bucketName = 'nickelback'
+let bucketName = 'inforegen'
 
 // AccessKey
 
-let AK = 'ZDlYPzgcB_u-HOlDCexoHRu65tCK7cktZkKUjpA1'
+let AK = 'opKzqbb_E-y_yKjCufAu8KOiBzlhMXH2G-EXuKVj'
 
 //  SecretKey
 
-let SK = 'xy1QlwLnCKbEqS8zOA_IypJ7ef0wN6VK7hsS8mGi'
+let SK = 'b6pyxBh1o8PCNALdlihIZv54wOxqrbxVohrRLQPH'
 
 // 空间绑定域名
 
-let domain = 'http://p3d12u2wq.bkt.clouddn.com/'
+let domain = 'http://ovwnlb7r9.bkt.clouddn.com/'
 
-/* utf.js - UTF-8 <=> UTF-16 convertion
+/* utf.js - UTF-8 <=> UTF-16 convertion  http://ovwnlb7r9.bkt.clouddn.com
  *
  * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
  * Version: 1.0

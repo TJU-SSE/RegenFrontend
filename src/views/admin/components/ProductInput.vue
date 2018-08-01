@@ -45,6 +45,10 @@
                    placeholder="Source" v-model="productData.introduction.videoUrl">
           </div>
         </div>
+        <div>
+          <label class="col-sm-2 control-label">Upload Video</label>
+          <upload-video></upload-video>
+        </div>
         <div class="form-group">
           <label for="inputSource" class="col-sm-2 control-label">Source</label>
           <div class="col-sm-8">
@@ -111,7 +115,7 @@
   import EditTable from './EditTable.vue'
   import Calendar from '../../components/Calendar'
   import CommonUtils from '../../../config/CommonUtils'
-
+  import uploadVideo from '../UploadVideo'
   import TagService from '@/service/TagService'
   import env from '@/config/env'
 
@@ -173,7 +177,8 @@
       Vodal,
       EditTable,
       Calendar,
-      Multiselect
+      Multiselect,
+      uploadVideo
     },
     methods: {
       hide () {
