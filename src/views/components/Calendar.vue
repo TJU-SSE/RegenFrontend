@@ -2,6 +2,7 @@
   <div class="form-group">
     <div class="col-sm-3">
       <select class="form-control" v-model="year">
+        <option value="0">不显示年</option>
         <option v-for="curYear in years" :value="curYear">{{curYear}}年</option>
       </select>
     </div>

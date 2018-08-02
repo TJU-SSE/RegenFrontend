@@ -33,7 +33,7 @@ function getObjFromTimestamp (timestamp) {
   let tag = timestamp % 10
   return {
     year: date.getFullYear(),
-    month: tag !== env.DATE_TAG.TO_YEAR ? date.getMonth() + 1 : 0,
+    month: tag !== env.DATE_TAG.TO_YEAR ? date.getMonth() : 0,
     day: tag === env.DATE_TAG.TO_DAY ? date.getDate() : 0
   }
 }
@@ -52,7 +52,10 @@ function getTimestampFromObj (year, month, day) {
 }
 
 function getDateStrFromOBj (obj) {
-  let result = '' + obj.year + '年'
+  let result = ''
+  if (obj.year !== 1900) {
+    result += (obj.year + '年')
+  }
   if (obj.month !== 0) {
     result += (obj.month + '月')
   }

@@ -58,7 +58,8 @@ export default {
       let response = await httpRequest(context, backendUrl.PRODUCT_GET_DETAIL + productId, 'get')
       if (response.body.code === env.RESP_CODE.SUCCESS) {
         response.body.msg.product.introduction = JSON.parse(response.body.msg.product.introduction)
-        console.log(response.body.msg.product.releaseTime)
+        console.log('Time:')
+        console.log(response.body.msg.product)
         response.body.msg.product.releaseTime = CommonUtils.getObjFromTimestamp(response.body.msg.product.releaseTime)
           // CommonUtils.formatDate(new Date(response.body.msg.product.releaseTime), 'yyyy-MM-dd')
       }
