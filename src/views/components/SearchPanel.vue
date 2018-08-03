@@ -1,6 +1,6 @@
 <template>
   <div class="search-panel-container">
-    <el-input placeholder="请输入内容" v-model="key"></el-input>
+    <el-input placeholder="Search" v-model="key"></el-input>
 
     <div v-for="product in products" class="search-item" @click="handleProductClick(product.id)">
       <img :alt="product.title" :src="product.img_url">

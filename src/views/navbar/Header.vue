@@ -43,7 +43,7 @@
 
         <ul class="header-list header-list-right header-menu">
           <li class="header-search" @click="handleCustomerSearchClick" v-if="curPathName === 'home'">
-            <span>CUSTOMIZE SEARCH </span>
+            <span>CUSTOMIZED SEARCH </span>
           </li>
           <li class="header-search">
             <el-popover
@@ -57,7 +57,7 @@
               <SearchPanel></SearchPanel>
             </el-popover>
             <div>
-              <i class="fa fa-search fa-lg" v-popover:popoverSearch></i>
+              <i class="fa fa-search" v-popover:popoverSearch></i>
             </div>
 
           </li>
