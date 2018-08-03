@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="contact">
-        <h4>业务咨询、简历投递 请留下您的联系方式</h4>
+        <h4>业务咨询或简历投递，请留下您的相关信息</h4>
         <h4>Please leave your contact details here for coopertaion or work opportunity</h4>
         <el-form :model="contactForm" :rules="rules" ref="contactForm">
           <el-form-item label="姓名 Name" prop="name">
@@ -214,6 +214,9 @@
         },
         rules: {
           name: [
+            {required: true, message: '这是一个必填项哦', trigger: 'blur'}
+          ],
+          email: [
             {required: true, message: '这是一个必填项哦', trigger: 'blur'}
           ],
           content: [
