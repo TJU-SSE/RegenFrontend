@@ -69,7 +69,7 @@
         </ul>
       </div>
 
-      <div class="brand-container">
+      <div @click="handleHeadChange('home')" class="brand-container">
         <img src="../../../static/img/logo2.jpg" class="brand">
         <!--<a class="link">EN/CN</a>-->
       </div>
