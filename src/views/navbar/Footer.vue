@@ -133,7 +133,8 @@
   }
 
   .footer-address {
-    font-size: 16px;
+    font-size: 14px;
+    font-family: Seravek;
   }
   .edit-container {
     margin-left: 12px;
