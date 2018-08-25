@@ -1,6 +1,6 @@
 <template>
   <div class="main-container news-detail">
-    <div class="edit-btn" @click="editModalInfo.show=true">
+    <div class="edit-btn" @click="editModalInfo.show=true" v-if="isLogin">
       <a href="javascript:"><i class="fa fa-edit fa-lg"></i></a>
     </div>
 
