@@ -37,7 +37,9 @@
         </span>
         </el-dialog>
       </div>
-
+    </div>
+    <div class="footer-row3 bold-font">
+      <a href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备17041605号</a>
     </div>
   </div>
 </template>
@@ -119,6 +121,13 @@
       justify-content: center;
       align-items: center;
       margin-top: 30px;
+    }
+    .footer-row3 {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      font-size: 1em;
     }
   }
   .footer .footer-row {
